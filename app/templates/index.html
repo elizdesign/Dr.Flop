@@ -5,156 +5,233 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🐱 Аптечка Доктора Флопа</title>
     <style>
-      
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 20px;
+        :root {
+            --primary: #3498db;
+            --primary-hover: #2980b9;
+            --bg: #f4f7f6;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --card-bg: #ffffff;
+            --danger: #e74c3c;
         }
         
-        /* Поле поиска */
-        .search-box {
-            background: white;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Сайдбар с категориями */
+        .sidebar {
+            width: 250px;
+            background: var(--card-bg);
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .category-btn {
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--text);
+            border-radius: 8px;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+
+        .category-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Основной контент */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+        }
+
+        header {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        /* Поиск */
+        .search-bar {
             display: flex;
             gap: 10px;
             margin-bottom: 30px;
         }
+
+        .search-bar form {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
+
         input[type="text"] {
             flex: 1;
-            padding: 12px 15px;
+            padding: 15px 20px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
             outline: none;
             transition: border-color 0.3s;
         }
+
         input[type="text"]:focus {
-            border-color: #3498db;
-        }
-        button {
-            padding: 12px 25px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #2980b9;
+            border-color: var(--primary);
         }
 
-        /* Карточки лекарств */
+        button {
+            padding: 15px 30px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Сетка карточек */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
         .medicine-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-left: 6px solid #3498db;
+            border-top: 4px solid var(--primary);
             transition: transform 0.2s;
         }
+
         .medicine-card:hover {
-            transform: translateY(-2px);
+            transform: translateY(-5px);
         }
-        .medicine-card.expired {
-            border-left-color: #e74c3c;
-            background-color: #fff5f5;
-        }
+
         .medicine-card h3 {
-            margin: 0 0 10px 0;
-            color: #2c3e50;
-            font-size: 20px;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
+
         .details {
-            display: flex;
-            gap: 20px;
             font-size: 14px;
-            color: #7f8c8d;
-            flex-wrap: wrap;
-        }
-        .details span {
+            color: var(--text-light);
             display: flex;
-            align-items: center;
-            gap: 5px;
+            flex-direction: column;
+            gap: 8px;
         }
-        
-        /* Пустое состояние */
+
         .empty-state {
             text-align: center;
-            background: white;
-            padding: 50px 20px;
-            border-radius: 12px;
-            color: #95a5a6;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .empty-state h2 {
-            color: #7f8c8d;
-            margin-top: 0;
+            padding: 50px;
+            color: var(--text-light);
         }
     </style>
 </head>
 <body>
-    <div class="container">
+
+    <!-- Сайдбар с категориями (показываем только если выбран код семьи) -->
+    {% if family_id %}
+    <aside class="sidebar">
+        <h2>Категории</h2>
+        <a href="/{{ family_id }}" class="category-btn {% if not selected_category and not search_query %}active{% endif %}">
+            📋 Все лекарства
+        </a>
+        {% for cat in categories %}
+            <a href="/{{ family_id }}?category={{ cat }}" class="category-btn {% if selected_category == cat %}active{% endif %}">
+                📂 {{ cat }}
+            </a>
+        {% endfor %}
+    </aside>
+    {% endif %}
+
+    <!-- Основной контент -->
+    <main class="main-content">
         <header>
             <h1>🐱 Аптечка Доктора Флопа</h1>
-            <div class="subtitle">Главный специалист по твоей домашней аптечке</div>
+            {% if family_id %}
+                <div class="subtitle">Код семьи: <strong>{{ family_id }}</strong></div>
+            {% else %}
+                <div class="subtitle">Введите код семьи, чтобы увидеть лекарства</div>
+            {% endif %}
         </header>
         
-        <div class="search-box">
-            <form method="GET" action="/" style="display: flex; width: 100%; gap: 10px;">
-                <input type="text" name="family" value="{{ family_id }}" placeholder="Введите код семьи (например, FAM-QXYS)">
-                <button type="submit">Показать</button>
+        <!-- Форма поиска и ввода кода семьи -->
+        <div class="search-bar">
+            <form method="GET" action="{% if family_id %}/{{ family_id }}{% else %}/{% endif %}">
+                {% if not family_id %}
+                    <input type="text" name="family" placeholder="Введите код семьи (например, FAM-QXYS)" required>
+                {% else %}
+                    <input type="text" name="search" value="{{ search_query }}" placeholder="🔍 Поиск лекарства по названию...">
+                {% endif %}
+                <button type="submit">Найти</button>
             </form>
         </div>
 
+        <!-- Список лекарств -->
         {% if medicines %}
-            {% for med in medicines %}
-                <!-- Проверяем, не просрочено ли лекарство, чтобы покрасить карточку -->
-                <div class="medicine-card">
-                    <h3>💊 {{ med.name }}</h3>
-                    <div class="details">
-                        <span>📂 {{ med.category }}</span>
-                        <span>🔢 {{ med.quantity }} шт.</span>
-                        <span>📅 Срок: {{ med.expiration_date or 'не указан' }}</span>
+            <div class="grid">
+                {% for med in medicines %}
+                    <div class="medicine-card">
+                        <h3>💊 {{ med.name }}</h3>
+                        <div class="details">
+                            <span>📂 {{ med.category }}</span>
+                            <span>🔢 Количество: {{ med.quantity }} шт.</span>
+                            <span>📅 Срок: {{ med.expiration_date or 'не указан' }}</span>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         {% elif family_id %}
             <div class="empty-state">
-                <h2>В этой аптечке пока пусто 📭</h2>
-                <p>Добавь лекарства через Telegram-бота!</p>
-            </div>
-        {% else %}
-            <div class="empty-state">
-                <h2>Введите код семьи 👆</h2>
-                <p>Код можно узнать у бота с помощью команды /invite</p>
+                <h2>Ничего не найдено 📭</h2>
+                <p>Попробуйте изменить запрос или добавить лекарства через бота.</p>
             </div>
         {% endif %}
-    </div>
+    </main>
+
 </body>
 </html>
