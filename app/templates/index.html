@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐱 Аптечка Доктора Флопа</title>
+    <style>
+      
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        /* Поле поиска */
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #3498db;
+        }
+        button {
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Карточки лекарств */
+        .medicine-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid #3498db;
+            transition: transform 0.2s;
+        }
+        .medicine-card:hover {
+            transform: translateY(-2px);
+        }
+        .medicine-card.expired {
+            border-left-color: #e74c3c;
+            background-color: #fff5f5;
+        }
+        .medicine-card h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 20px;
+        }
+        .details {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #7f8c8d;
+            flex-wrap: wrap;
+        }
+        .details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Пустое состояние */
+        .empty-state {
+            text-align: center;
+            background: white;
+            padding: 50px 20px;
+            border-radius: 12px;
+            color: #95a5a6;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .empty-state h2 {
+            color: #7f8c8d;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐱 Аптечка Доктора Флопа</h1>
+            <div class="subtitle">Главный специалист по твоей домашней аптечке</div>
+        </header>
+        
+        <div class="search-box">
+            <form method="GET" action="/" style="display: flex; width: 100%; gap: 10px;">
+                <input type="text" name="family" value="{{ family_id }}" placeholder="Введите код семьи (например, FAM-QXYS)">
+                <button type="submit">Показать</button>
+            </form>
+        </div>
+
+        {% if medicines %}
+            {% for med in medicines %}
+                <!-- Проверяем, не просрочено ли лекарство, чтобы покрасить карточку -->
+                <div class="medicine-card">
+                    <h3>💊 {{ med.name }}</h3>
+                    <div class="details">
+                        <span>📂 {{ med.category }}</span>
+                        <span>🔢 {{ med.quantity }} шт.</span>
+                        <span>📅 Срок: {{ med.expiration_date or 'не указан' }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% elif family_id %}
+            <div class="empty-state">
+                <h2>В этой аптечке пока пусто 📭</h2>
+                <p>Добавь лекарства через Telegram-бота!</p>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h2>Введите код семьи 👆</h2>
+                <p>Код можно узнать у бота с помощью команды /invite</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

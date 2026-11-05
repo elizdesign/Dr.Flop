@@ -42,5 +42,24 @@ services:
     networks:
       - default
 
+  web:
+    build: .
+    container_name: pharmacy_web
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app/app
+    command: gunicorn -w 2 -b 0.0.0.0:5000 app.web:app
+
 volumes:
   postgres_data:
